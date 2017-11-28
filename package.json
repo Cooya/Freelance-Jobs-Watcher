@@ -1,0 +1,24 @@
+{
+  "name": "jobs_watcher",
+  "version": "0.0.1",
+  "description": "Web scraper allowing to watch new freelance jobs on several platforms",
+  "main": "runner.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/Cooya/jobswatcher.git"
+  },
+  "author": "Coya",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/Cooya/jobswatcher#readme",
+  "dependencies": {
+    "@coya/contact": "0.0.1",
+    "@coya/database": "0.0.14",
+    "@coya/logs": "0.0.5",
+    "@coya/task-manager": "0.1.5",
+    "@coya/time": "0.0.3",
+    "@coya/web-scraper": "0.0.9"
+  }
+}
