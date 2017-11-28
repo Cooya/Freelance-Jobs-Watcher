@@ -4,7 +4,8 @@
   "description": "Web scraper allowing to watch new freelance jobs on several platforms",
   "main": "runner.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "daemon": "forever start daemon.js --prod"
   },
   "repository": {
     "type": "git",

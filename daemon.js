@@ -9,6 +9,15 @@ const CleaningTask = require('./cleaning_task');
 const ScrapingTask = require('./scraping_task');
 
 const config = require('./config.js');
+for(let i = 0; i < process.argv.length; ++i) {
+	if(process.argv[i] === '--prod')
+		config.executionMode = PROD_MODE;
+	if(process.argv[i] === '--dev')
+		config.executionMode = DEV_MODE;
+	if(process.argv[i] === '--debug')
+		config.executionMode = DEBUG_MODE;
+}
+
 const clients = [];
 const logs = new Logs('daemon_server', config);
 const httpAddress = 'http://localhost/jobs/binding';
@@ -27,9 +36,11 @@ const server = net.createServer(function(client) {
 
 server.on('error', function(err) {
 	logs.error(err);
+	if(err.code == 'EACCESS')
+		proces.exit(1);
 });
 
-server.listen(config.daemonIpcAddress, function() {
+server.listen(config.ipcAddress, function() {
 	logs.info('Daemon server started on "' + server.address() + '".');
 	http.get(httpAddress).on('error', (e) => {  // notify the server
 		logs.warning('HTTP server not started.');
