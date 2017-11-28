@@ -17,8 +17,8 @@ module.exports = class ScrapingTask extends Task {
 	constructor(name, timeInterval, config) {
 		super(name, timeInterval);
 		this.config = config;
-		this.scraper = ScraperClient.getInstance();
-		this.logs = new Logs(name + '_scraping_task', this.config);
+		this.scraper = ScraperClient.getInstance(config);
+		this.logs = new Logs(name + '_scraping_task', config);
 		this.scriptPath = SCRIPTS_FOLDER + name + '.js';
 		let script = require(this.scriptPath);
 		this.hostname = script.hostname;

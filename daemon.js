@@ -97,7 +97,7 @@ truelancerTask.on('error', sendErrorByEmail);
 //fiverrTask.on('job', sendJobsToClients);
 //fiverrTask.on('error', sendErrorByEmail);
 
-const taskManager = new TaskManager();
+const taskManager = new TaskManager(config);
 taskManager.end(() => {
 	taskManager.logs.info('Task manager shutted down.');
 	ScrapingTask.closeScraper();
