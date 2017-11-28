@@ -26,6 +26,7 @@ for(let i = 0; i < process.argv.length; ++i) {
 const clients = [];
 const logs = new Logs('daemon_server', config);
 const httpAddress = 'http://localhost/jobs/binding';
+Contact.init(config);
 const sendErrorByEmail = Contact.sendEmailToMe.bind(null, 'contact@nicodev.fr', 'Error from jobs watcher daemon');
 
 const server = net.createServer(function(client) {
