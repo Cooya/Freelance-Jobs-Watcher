@@ -4,7 +4,6 @@ const { ScraperClient } = require('@coya/web-scraper');
 const Database = require('@coya/database');
 const Logs = require('@coya/logs');
 const Time = require('@coya/time');
-const dbCredentials = require('./db_credentials.js');
 
 const JOBS_COLLECTION = 'watcher.jobs';
 const SKILLS_COLLECTION = 'watcher.skills';
@@ -15,10 +14,11 @@ let isInit = false;
 let savedSkills = [];
 
 module.exports = class ScrapingTask extends Task {
-	constructor(name, timeInterval) {
+	constructor(name, timeInterval, config) {
 		super(name, timeInterval);
+		this.config = config;
 		this.scraper = ScraperClient.getInstance();
-		this.logs = new Logs(name + '_scraping_task');
+		this.logs = new Logs(name + '_scraping_task', this.config);
 		this.scriptPath = SCRIPTS_FOLDER + name + '.js';
 		let script = require(this.scriptPath);
 		this.hostname = script.hostname;
@@ -28,7 +28,7 @@ module.exports = class ScrapingTask extends Task {
 	}
 
 	run() {
-		return initDatabaseConnection()
+		return initDatabaseConnection(this.config)
 		.then(getJobsList.bind(this))
 		.then((jobs) => {
 			if(!jobs) {
@@ -160,12 +160,12 @@ function saveSkills(jobSkills) {
 }
 
 // private static method
-function initDatabaseConnection() {
+function initDatabaseConnection(config) {
 	if(isInit)
 		return Promise.resolve();
 	else {
 		isInit = true;
-		return Database.connect(dbCredentials)
+		return Database.connect(config)
 		.then(Database.createCollection.bind(null, JOBS_COLLECTION))
 		.then(Database.createIndex.bind(null, JOBS_COLLECTION, {date: -1}))
 		.then(Database.selectCollection.bind(null, SKILLS_COLLECTION))

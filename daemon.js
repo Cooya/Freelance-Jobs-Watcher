@@ -8,17 +8,9 @@ const { TaskManager } = require('@coya/task-manager');
 const CleaningTask = require('./cleaning_task');
 const ScrapingTask = require('./scraping_task');
 
-Contact.init({
-	smtpHost: 'mail22.lwspanel.com',
-	smtpPort: 587,
-	smtpLogin: 'contact@nicodev.fr',
-	smtpPassword: 'pepino47420',
-	smtpRecipient: 'contact@nicodev.fr'
-});
-
+const config = require('./config.js');
 const clients = [];
-const logs = new Logs('daemon_server');
-const ipcAddress = path.join('\\\\?\\pipe', 'daemon_jobs');
+const logs = new Logs('daemon_server', config);
 const httpAddress = 'http://localhost/jobs/binding';
 const sendErrorByEmail = Contact.sendEmailToMe.bind(null, 'contact@nicodev.fr', 'Error from jobs watcher daemon');
 
@@ -37,7 +29,7 @@ server.on('error', function(err) {
 	logs.error(err);
 });
 
-server.listen(ipcAddress, function() {
+server.listen(config.daemonIpcAddress, function() {
 	logs.info('Daemon server started on "' + server.address() + '".');
 	http.get(httpAddress).on('error', (e) => {  // notify the server
 		logs.warning('HTTP server not started.');
@@ -57,29 +49,29 @@ function closeServer() {
 	});
 }
 
-const cleaningTask = new CleaningTask('cleaning', 3600);
+const cleaningTask = new CleaningTask('cleaning', 3600, config);
 
-const freelancerTask = new ScrapingTask('freelancer', 120);
+const freelancerTask = new ScrapingTask('freelancer', 120, config);
 freelancerTask.on('job', sendJobsToClients);
 freelancerTask.on('error', sendErrorByEmail);
 
-const pphTask = new ScrapingTask('pph', 120);
+const pphTask = new ScrapingTask('pph', 120, config);
 pphTask.on('job', sendJobsToClients);
 pphTask.on('error', sendErrorByEmail);
 
-const guruTask = new ScrapingTask('guru', 120);
+const guruTask = new ScrapingTask('guru', 120, config);
 guruTask.on('job', sendJobsToClients);
 guruTask.on('error', sendErrorByEmail);
 
-const truelancerTask = new ScrapingTask('truelancer', 120);
+const truelancerTask = new ScrapingTask('truelancer', 120, config);
 truelancerTask.on('job', sendJobsToClients);
 truelancerTask.on('error', sendErrorByEmail);
 
-//const upworkTask = new ScrapingTask('upwork', 120);
+//const upworkTask = new ScrapingTask('upwork', 120, config);
 //upworkTask.on('job', sendJobsToClients);
 //upworkTask.on('error', sendErrorByEmail);
 
-//const fiverrTask = new ScrapingTask('fiverr', 300);
+//const fiverrTask = new ScrapingTask('fiverr', 300, config);
 //fiverrTask.on('job', sendJobsToClients);
 //fiverrTask.on('error', sendErrorByEmail);
 
