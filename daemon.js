@@ -8,6 +8,10 @@ const { TaskManager } = require('@coya/task-manager');
 const CleaningTask = require('./cleaning_task');
 const ScrapingTask = require('./scraping_task');
 
+const PROD_MODE = 0;
+const DEV_MODE = 1;
+const DEBUG_MODE = 2;
+
 const config = require('./config.js');
 for(let i = 0; i < process.argv.length; ++i) {
 	if(process.argv[i] === '--prod')
