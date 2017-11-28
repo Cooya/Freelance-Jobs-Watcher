@@ -138,11 +138,18 @@ function getSingleJob(url) {
 function jobFormattingSecondStep(job) {
 	if(!job || !job.title || !job.description || !job.date || (!job.bidsCount && job.bidsCount != 0) || !job.skills || !job.budget)
 		return false;
-	job.date = Time.convertReadableToMilliseconds(job.date);
+	const convertedDate = Time.convertReadableToMilliseconds(job.date);
+	if(!convertedDate) {
+		if(job.date.toLowerCase().match(/^[a-z]{3} [0-9]{1,2}$/))
+			job.date = Date.now(); // sometimes the date on guru.com is fucked up
+		else
+			return false;
+	}
+	job.date = convertedDate;
 	job.skills = job.skills.map((skill) => {
 		return skill.toLowerCase();
 	});
-	return !!job.date;
+	return true;
 }
 
 // private method
