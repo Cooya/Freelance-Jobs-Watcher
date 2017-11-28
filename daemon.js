@@ -1,5 +1,6 @@
 const http = require('http');
 const net = require('net');
+const os = require('os');
 const path = require('path');
 
 const Logs = require('@coya/logs');
@@ -44,6 +45,7 @@ server.on('error', function(err) {
 		proces.exit(1);
 });
 
+if(os.platform() != 'win32') fs.unlinkSync(config.ipcAddress); // need to remove the pipe file on linux
 server.listen(config.ipcAddress, function() {
 	logs.info('Daemon server started on "' + server.address() + '".');
 	http.get(httpAddress).on('error', (e) => {  // notify the server
