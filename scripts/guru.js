@@ -5,8 +5,7 @@ module.exports = {
 	listJobs: function() {
 		var jobs = [];
 		$('li.serviceItem').each(function(i, elt) {
-			var link = $(elt).find('h2 > a');
-			jobs.push({host: 'guru.com', url: link.attr('href').trim()})
+			jobs.push({host: 'guru.com', url: $(elt).find('h2 > a').attr('href').trim()})
 		});
 		return jobs;
 	},

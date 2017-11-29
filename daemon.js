@@ -59,6 +59,7 @@ fs.access(config.ipcAddress, (err) => {
 });
 
 function sendJobsToClients(job) {
+	logs.debug(job);
 	clients.forEach(function(client) {
 		client.write(JSON.stringify(job));
 		client.pipe(client);
@@ -89,6 +90,10 @@ const truelancerTask = new ScrapingTask('truelancer', 120, config);
 truelancerTask.on('job', sendJobsToClients);
 truelancerTask.on('error', sendErrorByEmail);
 
+const twagoTask = new ScrapingTask('twago', 300, config);
+twagoTask.on('job', sendJobsToClients);
+twagoTask.on('error', sendErrorByEmail);
+
 //const upworkTask = new ScrapingTask('upwork', 120, config);
 //upworkTask.on('job', sendJobsToClients);
 //upworkTask.on('error', sendErrorByEmail);
@@ -103,4 +108,4 @@ taskManager.end(() => {
 	ScrapingTask.closeScraper();
 	closeServer();
 });
-taskManager.processAsynchronousTasks([cleaningTask, freelancerTask, pphTask, guruTask, truelancerTask]);
+taskManager.processAsynchronousTasks([twagoTask]);
