@@ -18,8 +18,8 @@
     "@coya/contact": "0.0.2",
     "@coya/database": "0.0.15",
     "@coya/logs": "0.0.5",
-    "@coya/task-manager": "0.1.6",
+    "@coya/task-manager": "0.1.7",
     "@coya/time": "0.0.4",
-    "@coya/web-scraper": "0.0.10"
+    "@coya/web-scraper": "0.0.11"
   }
 }

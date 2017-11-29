@@ -39,6 +39,8 @@ module.exports = class ScrapingTask extends Task {
 				});
 			}
 
+			let newJobFound = false;
+
 			return loop((job) => {
 				if(!jobFormattingFirstStep.call(this, job)) {
 					return Promise.reject({
@@ -73,12 +75,21 @@ module.exports = class ScrapingTask extends Task {
 						}
 
 						// the request has succeeded and job data are faultless
+						newJobFound = true;
 						this.eventEmitter.emit('job', job);
 						saveSkills.call(this, job.skills);
 						return Database.addDocs(JOBS_COLLECTION, job);
 					});
 				});
-			}, jobs);
+			}, jobs)
+			.then(() => {
+				if(newJobFound) {
+					if(this.timeInterval > 10)
+						this.timeInterval -= 10;
+				}
+				else
+					this.timeInterval += 10;
+			});
 		})
 		.catch((error) => {
 			this.logs.error(error);

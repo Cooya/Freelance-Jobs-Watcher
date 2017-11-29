@@ -90,7 +90,7 @@ const truelancerTask = new ScrapingTask('truelancer', 120, config);
 truelancerTask.on('job', sendJobsToClients);
 truelancerTask.on('error', sendErrorByEmail);
 
-const twagoTask = new ScrapingTask('twago', 300, config);
+const twagoTask = new ScrapingTask('twago', 120, config);
 twagoTask.on('job', sendJobsToClients);
 twagoTask.on('error', sendErrorByEmail);
 
