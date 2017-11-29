@@ -20,6 +20,6 @@
     "@coya/logs": "0.0.5",
     "@coya/task-manager": "0.1.7",
     "@coya/time": "0.0.4",
-    "@coya/web-scraper": "0.0.11"
+    "@coya/web-scraper": "0.0.12"
   }
 }
