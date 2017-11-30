@@ -91,7 +91,10 @@ twagoTask.on('error', sendErrorByEmail);
 //fiverrTask.on('error', sendErrorByEmail);
 
 const taskManager = new TaskManager(config);
-taskManager.end(() => {
+taskManager.onTaskEnd((task) => {
+	sendErrorByEmail('The task "' + task.name + '" has been removed from the task manager.');
+});
+taskManager.onEnd(() => {
 	taskManager.logs.info('Task manager shutted down.');
 	ScrapingTask.closeScraper();
 	closeServer();
