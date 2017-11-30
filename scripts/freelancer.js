@@ -12,6 +12,9 @@ module.exports = {
 	},
 
 	getJob: function() {
+		if(window.location.href == 'https://www.freelancer.com/job/')
+			return {nothing: true};
+
 		if($('#main h3').text() === 'Project Deleted')
 			return {nothing: true};
 

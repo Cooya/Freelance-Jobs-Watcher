@@ -9,19 +9,7 @@ const { TaskManager } = require('@coya/task-manager');
 const CleaningTask = require('./cleaning_task');
 const ScrapingTask = require('./scraping_task');
 
-const PROD_MODE = 0;
-const DEV_MODE = 1;
-const DEBUG_MODE = 2;
-
 const config = require('./config.js');
-for(let i = 0; i < process.argv.length; ++i) {
-	if(process.argv[i] === '--prod')
-		config.executionMode = PROD_MODE;
-	if(process.argv[i] === '--dev')
-		config.executionMode = DEV_MODE;
-	if(process.argv[i] === '--debug')
-		config.executionMode = DEBUG_MODE;
-}
 
 const clients = [];
 const logs = new Logs('daemon_server', config);
@@ -108,4 +96,4 @@ taskManager.end(() => {
 	ScrapingTask.closeScraper();
 	closeServer();
 });
-taskManager.processAsynchronousTasks([cleaningTask, freelancerTask, pphTask, guruTask, truelancerTask, twagoTask]);
+taskManager.processAsynchronousTasks([cleaningTask, freelancerTask]);

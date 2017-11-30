@@ -140,7 +140,8 @@ function getSingleJob(url) {
 		scriptPath: this.scriptPath,
 		function: 'getJob',
 		args: {
-			referer: this.jobsListUrl
+			referer: this.jobsListUrl,
+			debug: this.config.isDebugMode
 		}
 	});
 }
