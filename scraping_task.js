@@ -41,11 +41,12 @@ module.exports = class ScrapingTask extends Task {
 
 			let newJobFound = false;
 
-			return loop((job) => {
+			return loop((job, i) => {
 				if(!jobFormattingFirstStep.call(this, job)) {
 					return Promise.reject({
 						msg: 'The first step of job checking has failed.',
-						job: job
+						job: job,
+						url: jobs[i].url
 					});
 				}
 
@@ -70,7 +71,8 @@ module.exports = class ScrapingTask extends Task {
 						if(!jobFormattingSecondStep.call(this, job)) {
 							return Promise.reject({
 								msg: 'The second step of job checking has failed.',
-								job: job
+								job: job,
+								url: jobs[i].url
 							});
 						}
 
@@ -204,7 +206,7 @@ function getSkillsFromDatabase() {
 
 // private static method
 function loop(action, array, i = 0) {
-	return action(array[i]).then(function() {
+	return action(array[i], i).then(function() {
 		if(++i < array.length)
 			return loop(action, array, i);
 	});

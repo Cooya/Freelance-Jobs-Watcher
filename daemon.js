@@ -99,4 +99,4 @@ taskManager.onEnd(() => {
 	ScrapingTask.closeScraper();
 	closeServer();
 });
-taskManager.processAsynchronousTasks([cleaningTask, freelancerTask]);
+taskManager.processAsynchronousTasks([cleaningTask, freelancerTask, pphTask, guruTask, truelancerTask, twagoTask]);
