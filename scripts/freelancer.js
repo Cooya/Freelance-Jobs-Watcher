@@ -5,8 +5,11 @@ module.exports = {
 	listJobs: function() {
 		var jobs = [];
 		$('.JobSearchCard-item').each(function(i, elt) {
-			var link = $(elt).find('.JobSearchCard-primary-heading > a');
-			jobs.push({host: 'freelancer.com', url: link.attr('href').trim()});
+			jobs.push({
+				host: 'freelancer.com',
+				url: $(elt).find('.JobSearchCard-primary-heading > a').attr('href').trim(),
+				bidsCount: parseInt($(elt).find('div.JobSearchCard-secondary-entry').text().replace(' entries', '').replace(' bids', '').trim())
+			});
 		});
 		return jobs;
 	},
@@ -15,7 +18,7 @@ module.exports = {
 		if(window.location.href == 'https://www.freelancer.com/job/')
 			return {nothing: true};
 
-		if($('#main h3').text() === 'Project Deleted')
+		if($('#main h3').text() == 'Project Deleted')
 			return {nothing: true};
 
 		if($('#fb-login-btn').length) // need to log in for see the job
@@ -29,41 +32,34 @@ module.exports = {
 				title: $('h1.logoutHero-column-header').text().trim(),
 				description: $('p.contest-brief').html().trim(),
 				date: Date.now(),
-				bidsCount: parseInt($('li.logoutHero-contestItem:nth-child(3)').text().replace('Entries Received:', '').trim()),
 				skills: $('ul.logoutHero-recommendedSkills > li').map(function(i, elt) {
 					return $(elt).text().trim();
 				}).get(),
-				budget: $('li.logoutHero-contestItem:nth-child(2)').text().replace('Prize:', '').trim(),
+				budget: $('li.logoutHero-contestItem:nth-child(2)').text().replace('Prize:', '').trim()
 			};
 		}
 		else {
+			var title = $('h1.PageProjectViewLogout-header-title').text().trim();
+			if(title.startsWith('Project for '))
+				return {nothing: true};
+
 			var description = '';
-			$('div.PageProjectViewLogout-detail > p').each(function(i, elt) {
-				if(i > 10)
-					return;
+			$('div.PageProjectViewLogout-detail > p:not(.PageProjectViewLogout-detail-tags)').each(function(i, elt) {
 				const text = $(elt).text().trim();
-				if(text.length > 0)
-					description += text + '<br>';
+				if(text.length)
+					description += '<p>' + text + '</p>';
 			});
-			if(description === '') // on freelancer.com, it is possible to create a project without description...
+			if(description == '') // on freelancer.com, it is possible to create a project without description...
 				description = 'No description.';
 
-			var bidsCount = parseInt($('h2.Card-heading:first-child').text().split(' ')[0].trim());
-			if(!bidsCount)
-				bidsCount = 0;
-
 			return {
-				title: $('h1.PageProjectViewLogout-header-title').text().trim(),
-				//title: $('h1.project_name').text().trim(),
-				description: description.replace(/Project ID: #[0-9]+/, ''),
+				title: title,
+				description: description,
 				date: Date.now(),
-				//bidsCount: parseInt($('#num-bids').text().trim()),
-				bidsCount: bidsCount,
 				skills: $('a.PageProjectViewLogout-detail-tags-link--highlight').map(function(i, elt) {
 					return $(elt).text().trim();
 				}).get(),
-				budget: $('p.PageProjectViewLogout-header-byLine').text().replace('Budget', '').trim(),
-				//budget: $('div.project-budget').text().trim()
+				budget: $('p.PageProjectViewLogout-header-byLine').text().replace('Budget', '').trim()
 			};
 		}
 	}
