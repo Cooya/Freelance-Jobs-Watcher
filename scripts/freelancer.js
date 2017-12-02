@@ -28,9 +28,12 @@ module.exports = {
 			return {nothing: true};
 
 		if($('.logoutHero').length) { // contest
+			var description = $('p.contest-brief');
+			description = description.length ? description.html().trim() : 'No description.'; // a description may be null
+
 			return {
 				title: $('h1.logoutHero-column-header').text().trim(),
-				description: $('p.contest-brief').html().trim(),
+				description: description,
 				date: Date.now(),
 				skills: $('ul.logoutHero-recommendedSkills > li').map(function(i, elt) {
 					return $(elt).text().trim();
