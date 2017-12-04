@@ -95,7 +95,7 @@ module.exports = class ScrapingTask extends Task {
 		})
 		.catch((error) => {
 			this.logs.error(error);
-			this.eventEmitter.emit('error', JSON.stringify(error));
+			this.eventEmitter.emit('error', JSON.stringify(error, (k, v) => { if (v === undefined) { return null; } return v; }));
 			return Promise.reject(error); // critical error => stop the task manager
 		});
 	}
