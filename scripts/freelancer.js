@@ -21,7 +21,7 @@ module.exports = {
 		if($('#main h3').text() == 'Project Deleted')
 			return {nothing: true};
 
-		if($('#fb-login-btn').length) // need to log in for see the job
+		if($('#login_form_container')) // need to log in for see the job (be careful, an id selector returns null if it does not exist)
 			return {nothing: true};
 
 		if(!$('#main').children().length) // empty page (not a public project)
