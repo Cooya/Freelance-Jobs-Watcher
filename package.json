@@ -17,9 +17,8 @@
   "dependencies": {
     "@coya/contact": "0.0.5",
     "@coya/database": "0.0.19",
-    "@coya/logs": "0.2.0",
+    "@coya/logs": "0.2.1",
     "@coya/task-manager": "0.2.2",
-    "@coya/time": "0.0.6",
     "@coya/web-scraper": "0.0.13"
   }
 }

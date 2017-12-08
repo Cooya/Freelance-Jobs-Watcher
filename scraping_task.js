@@ -3,7 +3,6 @@ const { Task } = require('@coya/task-manager');
 const { ScraperClient } = require('@coya/web-scraper');
 const Database = require('@coya/database');
 const Logs = require('@coya/logs');
-const Time = require('@coya/time');
 
 const JOBS_COLLECTION = 'watcher.jobs';
 const SKILLS_COLLECTION = 'watcher.skills';
