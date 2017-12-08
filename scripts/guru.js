@@ -19,8 +19,12 @@ module.exports = {
 			skills.push($(elt).text().trim());
 		});
 
+		var title = $('h1.projectTitle');
+		if(title.length > 1) // sometimes there is another hidden title
+			title = $(title[0]);
+
 		return {
-			title: $('h1.projectTitle').text().trim(),
+			title: title.text().trim(),
 			description: $('.jobDetail-section pre').html().replace(/<em>.+<\/em>/, '').trim(),
 			date: $('span.dt-style1 > span').text().trim(),
 			bidsCount: parseInt($('#snpProposalCount').text().trim()),

@@ -16,16 +16,17 @@ module.exports = {
 
 	getJob: function() {
 		if(window.location.href == 'https://www.freelancer.com/job/')
-			return {nothing: true};
+			return {nothing: true, id: 1};
 
-		if($('#main h3').text() == 'Project Deleted')
-			return {nothing: true};
+		const heading = $('#main h3');
+		if(heading && heading.text() == 'Project Deleted')
+			return {nothing: true, id: 2};
 
-		if($('#login_form_container')) // need to log in for see the job (be careful, an id selector returns null if it does not exist)
-			return {nothing: true};
+		if($('#login_form_container').length) // need to log in for see the job (be careful, an id selector returns null if it does not exist)
+			return {nothing: true, id: 3};
 
 		if(!$('#main').children().length) // empty page (not a public project)
-			return {nothing: true};
+			return {nothing: true, id: 4};
 
 		if($('.logoutHero').length) { // contest
 			var description = $('p.contest-brief');
@@ -44,7 +45,7 @@ module.exports = {
 		else {
 			var title = $('h1.PageProjectViewLogout-header-title').text().trim();
 			if(title.startsWith('Project for '))
-				return {nothing: true};
+				return {nothing: true, id: 5};
 
 			var description = '';
 			$('div.PageProjectViewLogout-detail > p:not(.PageProjectViewLogout-detail-tags)').each(function(i, elt) {

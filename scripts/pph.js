@@ -12,7 +12,8 @@ module.exports = {
 	},
 
 	getJob: function() {
-		if($('h1').text() === 'This Job is no longer available')
+		const title = $('h1').text().trim();
+		if(title == 'This Job is no longer available' || title == 'This Job has been moderated')
 			return {nothing: true};
 
 		var skills = [];
@@ -21,7 +22,7 @@ module.exports = {
 		});
 
 		return {
-			title: $('h1').text().trim(),
+			title: title,
 			description: $('div.project-description').html().trim(),
 			date: $('time.info-value').text().trim(),
 			bidsCount: parseInt($('span.info-value').text().trim()),

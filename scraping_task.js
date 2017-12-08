@@ -64,8 +64,11 @@ module.exports = class ScrapingTask extends Task {
 							});
 						}
 
-						if(result['nothing'])
+						if(result['nothing']) {
+							this.logs.warning('No job found at the URL "' + job.url + '".');
+							this.logs.debug(result);
 							return Promise.resolve();
+						}
 
 						Object.assign(job, result); // merge "result" into "job"
 						if(!jobFormattingSecondStep.call(this, job)) {
@@ -152,14 +155,7 @@ function getSingleJob(url) {
 function jobFormattingSecondStep(job) {
 	if(!job || !job.title || !job.description || !job.date || (!job.bidsCount && job.bidsCount != 0) || !job.skills || !job.budget)
 		return false;
-	const convertedDate = Time.convertReadableToMilliseconds(job.date);
-	if(!convertedDate) {
-		if(job.date.toLowerCase().match(/^[a-z]{3} [0-9]{1,2}$/))
-			job.date = Date.now(); // sometimes the date on guru.com is fucked up
-		else
-			return false;
-	}
-	job.date = convertedDate;
+	job.date = Date.now();
 	job.skills = job.skills.map((skill) => {
 		return skill.toLowerCase();
 	});
