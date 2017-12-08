@@ -42,11 +42,17 @@ module.exports = class ScrapingTask extends Task {
 
 			return loop((job, i) => {
 				if(!jobFormattingFirstStep.call(this, job)) {
-					return Promise.reject({
-						msg: 'The first step of job checking has failed.',
-						job: job,
-						url: jobs[i].url
-					});
+					if(!jobs[i])
+						return Promise.reject({
+							msg: 'The jobs list seems to be corrupted.',
+							jobs: jobs
+						});
+					else
+						return Promise.reject({
+							msg: 'The first step of job checking has failed.',
+							job: job,
+							url: jobs[i].url
+						});
 				}
 
 				return Database.getOneDoc(JOBS_COLLECTION, {url: job.url})
