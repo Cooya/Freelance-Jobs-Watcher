@@ -30,11 +30,10 @@ module.exports = class ScrapingTask extends Task {
 		return initDatabaseConnection(this.config)
 		.then(getJobsList.bind(this))
 		.then((jobs) => {
-			if(!jobs) {
+			if(!jobs.length) {
 				return Promise.reject({
 					msg: 'No jobs have been found.',
-					task: this.name,
-					stop: true // critical error => remove the task from the task list
+					task: this.name
 				});
 			}
 
@@ -45,7 +44,8 @@ module.exports = class ScrapingTask extends Task {
 					if(!jobs[i])
 						return Promise.reject({
 							msg: 'The jobs list seems to be corrupted.',
-							jobs: jobs
+							task: this.name,
+							jobs: jobs,
 						});
 					else
 						return Promise.reject({
