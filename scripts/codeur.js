@@ -18,6 +18,9 @@ module.exports = {
 	},
 
 	getJob: function() {
+		if($('span.badge').text().trim() == 'Caché')
+			return {nothing: true};
+
 		return {
 			title: $('h1.display-5').text().trim(),
 			description: $('div.content:nth-child(1)').html().trim(),
