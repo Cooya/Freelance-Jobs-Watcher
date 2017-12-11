@@ -19,6 +19,6 @@
     "@coya/database": "0.0.19",
     "@coya/logs": "0.2.1",
     "@coya/task-manager": "0.2.2",
-    "@coya/web-scraper": "0.0.13"
+    "@coya/web-scraper": "0.0.14"
   }
 }

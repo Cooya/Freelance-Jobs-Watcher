@@ -14,18 +14,22 @@ module.exports = {
 		if($('h1.guruNotFound-title').length)
 			return {nothing: true};
 
+		var title = $('h1.projectTitle');
+		if(title.length) // sometimes there is another hidden title
+			title = $(title[0]);
+
+		var description = $('.jobDetail-section pre');
+		if(description.length) // if someone posts a comment, there is several descriptions
+			description = $(description[0]);
+
 		var skills = [];
 		$('a.skillItem').each(function(i, elt) {
 			skills.push($(elt).text().trim());
 		});
 
-		var title = $('h1.projectTitle');
-		if(title.length > 1) // sometimes there is another hidden title
-			title = $(title[0]);
-
 		return {
 			title: title.text().trim(),
-			description: $('.jobDetail-section pre').html().replace(/<em>.+<\/em>/, '').trim(),
+			description: description.html().replace(/<em>.+<\/em>/, '').trim(),
 			date: $('span.dt-style1 > span').text().trim(),
 			bidsCount: parseInt($('#snpProposalCount').text().trim()),
 			skills: skills,

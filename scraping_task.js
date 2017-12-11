@@ -30,12 +30,11 @@ module.exports = class ScrapingTask extends Task {
 		return initDatabaseConnection(this.config)
 		.then(getJobsList.bind(this))
 		.then((jobs) => {
-			if(!jobs.length) {
+			if(!jobs.length)
 				return Promise.reject({
 					msg: 'No jobs have been found.',
 					task: this.name
 				});
-			}
 
 			let newJobFound = false;
 
@@ -125,7 +124,8 @@ function getJobsList() {
 		scriptPath: this.scriptPath,
 		function: 'listJobs',
 		args: {
-			referer: this.hostname
+			referer: this.hostname,
+			debug: this.config.isDebugMode
 		}
 	});
 }

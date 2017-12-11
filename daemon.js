@@ -82,6 +82,10 @@ const twagoTask = new ScrapingTask('twago', 120, config);
 twagoTask.on('job', sendJobsToClients);
 twagoTask.on('error', sendErrorByEmail);
 
+const codeurTask = new ScrapingTask('codeur', 120, config);
+codeurTask.on('job', sendJobsToClients);
+codeurTask.on('error', sendErrorByEmail);
+
 //const upworkTask = new ScrapingTask('upwork', 120, config);
 //upworkTask.on('job', sendJobsToClients);
 //upworkTask.on('error', sendErrorByEmail);
@@ -99,4 +103,4 @@ taskManager.onEnd(() => {
 	ScrapingTask.closeScraper();
 	closeServer();
 });
-taskManager.processAsynchronousTasks([cleaningTask, freelancerTask, pphTask, guruTask, truelancerTask, twagoTask]);
+taskManager.processAsynchronousTasks([cleaningTask, freelancerTask, pphTask, guruTask, truelancerTask, twagoTask, codeurTask]);
