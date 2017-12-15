@@ -1,6 +1,6 @@
 {
   "name": "jobs_watcher",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Web scraper allowing to watch new freelance jobs on several platforms",
   "main": "runner.js",
   "scripts": {
