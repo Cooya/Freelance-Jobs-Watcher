@@ -88,6 +88,14 @@ module.exports = class ScrapingTask extends Task {
 						this.eventEmitter.emit('job', job);
 						saveSkills.call(this, job.skills);
 						return Database.addDocs(JOBS_COLLECTION, job);
+					})
+					.catch((err) => {
+						if(err.error == 'page_opening_failed') {
+							this.logs.warning('The page opening has failed 5 times in a row.');
+							return Promise.resolve();
+						}
+						else
+							return Promise.reject(err);
 					});
 				});
 			}, jobs)
@@ -158,7 +166,7 @@ function getSingleJob(url) {
 
 // private method
 function jobFormattingSecondStep(job) {
-	if(!job || !job.title || !job.description || !job.date || (!job.bidsCount && job.bidsCount != 0) || !job.skills || !job.budget)
+	if(!job || !job.title || !job.description || !Number.isInteger(job.bidsCount) || !job.skills || (!job.private && !job.budget))
 		return false;
 	job.date = Date.now();
 	job.skills = job.skills.map((skill) => {

@@ -5,10 +5,24 @@ module.exports = {
 	listJobs: function() {
 		var jobs = [];
 		$('.JobSearchCard-item').each(function(i, elt) {
+			elt = $(elt);
+
+			var titleElt = elt.find('div.JobSearchCard-primary-heading > a');
+			var title = titleElt.text();
+			if(title.indexOf('Project for ') != -1 || title.indexOf('Private project or contest') != -1)
+				return;
+
+			var skills = elt.find('a.JobSearchCard-primary-tagsLink').map(function(i, elt) {
+				return $(elt).text().trim();
+			}).get();
+
 			jobs.push({
 				host: 'freelancer.com',
-				url: $(elt).find('.JobSearchCard-primary-heading > a').attr('href').trim(),
-				bidsCount: parseInt($(elt).find('div.JobSearchCard-secondary-entry').text().replace(' entries', '').replace(' bids', '').trim())
+				title: title.trim(),
+				url: titleElt.attr('href').trim(),
+				description: elt.find('p.JobSearchCard-primary-description').text().trim(),
+				skills: skills,
+				bidsCount: parseInt(elt.find('div.JobSearchCard-secondary-entry').text().replace(' entries', '').replace(' bids', '').trim())
 			});
 		});
 		return jobs;
@@ -22,31 +36,29 @@ module.exports = {
 		if(heading && heading.text() == 'Project Deleted')
 			return {nothing: true, id: 2};
 
-		if($('#login_form_container').length) // need to log in for see the job (be careful, an id selector returns null if it does not exist)
+		const error = $('#span_err_header');
+		if(error && error.text() == 'Error')
 			return {nothing: true, id: 3};
 
+		if($('h1').text() == 'Sign Non-Disclosure Agreement')
+			return {private: true};
+
+		if($('#login_form_container').length) // need to log in for see the job
+			return {private: true};
+
 		if(!$('#main').children().length) // empty page (not a public project)
-			return {nothing: true, id: 4};
+			return {private: true};
 
 		if($('.logoutHero').length) { // contest
 			var description = $('p.contest-brief');
 			description = description.length ? description.html().trim() : 'No description.'; // a description may be null
 
 			return {
-				title: $('h1.logoutHero-column-header').text().trim(),
 				description: description,
-				date: Date.now(),
-				skills: $('ul.logoutHero-recommendedSkills > li').map(function(i, elt) {
-					return $(elt).text().trim();
-				}).get(),
 				budget: $('li.logoutHero-contestItem:nth-child(2)').text().replace('Prize:', '').trim()
 			};
 		}
 		else {
-			var title = $('h1.PageProjectViewLogout-header-title').text().trim();
-			if(title.startsWith('Project for '))
-				return {nothing: true, id: 5};
-
 			var description = '';
 			$('div.PageProjectViewLogout-detail > p:not(.PageProjectViewLogout-detail-tags)').each(function(i, elt) {
 				const text = $(elt).text().trim();
@@ -57,12 +69,7 @@ module.exports = {
 				description = 'No description.';
 
 			return {
-				title: title,
 				description: description,
-				date: Date.now(),
-				skills: $('a.PageProjectViewLogout-detail-tags-link--highlight').map(function(i, elt) {
-					return $(elt).text().trim();
-				}).get(),
 				budget: $('p.PageProjectViewLogout-header-byLine').text().replace('Budget', '').trim()
 			};
 		}

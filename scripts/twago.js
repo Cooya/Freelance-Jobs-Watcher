@@ -6,16 +6,19 @@ module.exports = {
 		var jobs = [];
 		$('div.search-result').each(function(i, elt) {
 			var match = $(elt).find('div.search-result-additional-component > a').text().trim().match(/([0-9]{1,2}) Bids/);
-			jobs.push({host: 'twago.com', url: $(elt).find('div.project-name > a').attr('href').trim(), bidsCount: match ? parseInt(match[1]) : 0})
+			jobs.push({
+				host: 'twago.com',
+				url: $(elt).find('div.project-name > a').attr('href').trim(),
+				bidsCount: match ? parseInt(match[1]) : 0
+			});
 		});
 		return jobs;
 	},
 
 	getJob: function() {
-		var skills = [];
-		$('span.job-public-tag').each(function(i, elt) {
-			skills.push($(elt).text().trim());
-		});
+		var skills = $('span.job-public-tag').map(function(i, elt) {
+			return $(elt).text().trim();
+		}).get();
 
 		var budget;
 		var date;

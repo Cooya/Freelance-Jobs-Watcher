@@ -22,10 +22,9 @@ module.exports = {
 		if(description.length) // if someone posts a comment, there is several descriptions
 			description = $(description[0]);
 
-		var skills = [];
-		$('a.skillItem').each(function(i, elt) {
-			skills.push($(elt).text().trim());
-		});
+		var skills = $('a.skillItem').map(function(i, elt) {
+			return $(elt).text().trim();
+		}).get();
 
 		return {
 			title: title.text().trim(),

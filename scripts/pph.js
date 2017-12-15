@@ -16,10 +16,9 @@ module.exports = {
 		if(title == 'This Job is no longer available' || title == 'This Job has been moderated')
 			return {nothing: true};
 
-		var skills = [];
-		$('a.tag-item').each(function(i, elt) {
-			skills.push($(elt).text().trim());
-		});
+		var skills = $('a.tag-item').map(function(i, elt) {
+			return $(elt).text().trim();
+		}).get();
 
 		return {
 			title: title,

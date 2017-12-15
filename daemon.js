@@ -86,14 +86,6 @@ const codeurTask = new ScrapingTask('codeur', 120, config);
 codeurTask.on('job', sendJobsToClients);
 codeurTask.on('error', sendErrorByEmail);
 
-//const upworkTask = new ScrapingTask('upwork', 120, config);
-//upworkTask.on('job', sendJobsToClients);
-//upworkTask.on('error', sendErrorByEmail);
-
-//const fiverrTask = new ScrapingTask('fiverr', 300, config);
-//fiverrTask.on('job', sendJobsToClients);
-//fiverrTask.on('error', sendErrorByEmail);
-
 const taskManager = new TaskManager(config);
 taskManager.onTaskEnd((task) => {
 	sendErrorByEmail('The task "' + task.name + '" has been removed from the task manager.');

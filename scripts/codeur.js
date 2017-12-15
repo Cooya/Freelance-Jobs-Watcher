@@ -5,28 +5,32 @@ module.exports = {
 	listJobs: function() {
 		var jobs = [];
 		$('div.row.mb-2').each(function(i, elt) {
-			var url = $(elt).find('h5.small-project-title > a').attr('href').trim();
+			var title = $(elt).find('h5.small-project-title > a');
 
-			var skills = [];
-			$(elt).find('ul.categories > li').each(function(i, elt) {
-				skills.push($(elt).text().trim());
+			var skills = $(elt).find('ul.categories > li').map(function(i, elt) {
+				return $(elt).text().trim();
+			}).get();
+
+			jobs.push({
+				host: 'codeur.com',
+				title: title.text().trim(),
+				url: title.attr('href').trim(),
+				description: $(elt).find('div.summary-text').text().trim(),
+				date: $(elt).find('time').text().trim(),
+				skills: skills,
+				budget: $(elt).find('div.small-project-meta > span:nth-child(2)').text().trim(),
+				bidsCount: parseInt($(elt).find('div.small-project-meta > span:nth-child(3)').text().replace('offres', '').trim())
 			});
-
-			jobs.push({host: 'codeur.com', url: url, skills: skills})
 		});
 		return jobs;
 	},
 
 	getJob: function() {
 		if($('span.badge').text().trim() == 'Caché')
-			return {nothing: true};
+			return {}; // the scraping task will also check everything
 
 		return {
-			title: $('h1.display-5').text().trim(),
-			description: $('div.content:nth-child(1)').html().trim(),
-			date: $('table.project-specs tr:nth-child(2) strong').text().trim(),
-			bidsCount: parseInt($('div.banner-subtitle > span:nth-child(3)').text().replace('offres', '').trim()),
-			budget: $('table.project-specs tr:nth-child(1) strong').text().trim()
+			description: $('div.content:nth-child(1)').html().trim()
 		};
 	}
 };
