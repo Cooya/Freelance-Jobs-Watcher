@@ -1,6 +1,6 @@
 const EventEmitter = require('events');
 const { Task } = require('@coya/task-manager');
-const { ScraperClient } = require('@coya/web-scraper');
+const { PhantomScraper } = require('@coya/web-scraper');
 const Database = require('@coya/database');
 const Logs = require('@coya/logs');
 
@@ -16,12 +16,9 @@ module.exports = class ScrapingTask extends Task {
 	constructor(name, timeInterval, config) {
 		super(name, timeInterval);
 		this.config = config;
-		this.scraper = ScraperClient.getInstance(config);
+		this.scraper = PhantomScraper.getInstance(config);
 		this.logs = new Logs(name + '_scraping_task', config);
-		this.scriptPath = SCRIPTS_FOLDER + name + '.js';
-		let script = require(this.scriptPath);
-		this.hostname = script.hostname;
-		this.jobsListUrl = script.jobsListUrl;
+		this.script = require(SCRIPTS_FOLDER + name + '.js');
 		this.eventEmitter = new EventEmitter();
 		this.eventEmitter.setMaxListeners(1);
 	}
@@ -119,8 +116,8 @@ module.exports = class ScrapingTask extends Task {
 		this.eventEmitter.on(eventName, handler);
 	}
 
-	static closeScraper() {
-		ScraperClient.getInstance().closeScraper();
+	closeScraper() {
+		this.scraper.close();
 	}
 };
 
@@ -128,13 +125,10 @@ module.exports = class ScrapingTask extends Task {
 function getJobsList() {
 	this.logs.info('Loading ' + this.name + ' jobs list...');
 	return this.scraper.request({
-		url: this.jobsListUrl,
-		scriptPath: this.scriptPath,
-		function: 'listJobs',
-		args: {
-			referer: this.hostname,
-			debug: this.config.isDebugMode
-		}
+		url: this.script.jobsListUrl,
+		fct: this.script.listJobs,
+		referer: this.script.hostname,
+		debug: this.config.isDebugMode
 	});
 }
 
@@ -146,7 +140,7 @@ function jobFormattingFirstStep(job) {
 	if(pos != -1)
 		job.url = job.url.substr(0, pos);
 	if(job.url[0] == '/')
-		job.url = this.hostname + job.url;
+		job.url = this.script.hostname + job.url;
 	return true;
 }
 
@@ -155,12 +149,9 @@ function getSingleJob(url) {
 	this.logs.info('Retrieving job data with url = "' + url + '"...');
 	return this.scraper.request({
 		url: url, 
-		scriptPath: this.scriptPath,
-		function: 'getJob',
-		args: {
-			referer: this.jobsListUrl,
-			debug: this.config.isDebugMode
-		}
+		fct: this.script.getJob,
+		referer: this.script.jobsListUrl,
+		debug: this.config.isDebugMode
 	});
 }
 
