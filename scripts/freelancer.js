@@ -12,6 +12,10 @@ module.exports = {
 			if(title.indexOf('Project for ') != -1 || title.indexOf('Private project or contest') != -1)
 				return;
 
+			var description = elt.find('p.JobSearchCard-primary-description').text().trim();
+			if(description == '') // a description may be null
+				description = 'No description.';
+
 			var skills = elt.find('a.JobSearchCard-primary-tagsLink').map(function(i, elt) {
 				return $(elt).text().trim();
 			}).get();
@@ -20,7 +24,7 @@ module.exports = {
 				host: 'freelancer.com',
 				title: title.trim(),
 				url: titleElt.attr('href').trim(),
-				description: elt.find('p.JobSearchCard-primary-description').text().trim(),
+				description: description,
 				skills: skills,
 				bidsCount: parseInt(elt.find('div.JobSearchCard-secondary-entry').text().replace(' entries', '').replace(' bids', '').trim())
 			});
