@@ -15,7 +15,7 @@ const clients = [];
 const logs = new Logs('daemon_server', config);
 const httpAddress = 'http://localhost/jobs/binding';
 Contact.init(config);
-const sendErrorByEmail = Contact.sendEmailToMe.bind(null, 'contact@nicodev.fr', 'Error from jobs watcher daemon');
+const sendErrorByEmail = Contact.sendEmailToMe.bind(null, config.smtpSender, 'Error from jobs watcher daemon');
 
 const server = net.createServer(function(client) {
 	logs.info('New client connected.');
