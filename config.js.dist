@@ -1,0 +1,31 @@
+const os = require('os');
+
+const PROD_MODE = 0;
+const DEV_MODE = 1;
+const DEBUG_MODE = 2;
+
+let executionMode = DEV_MODE;
+for(let i = 0; i < process.argv.length; ++i) {
+	if(process.argv[i] === '--prod')
+		executionMode = PROD_MODE;
+	if(process.argv[i] === '--dev')
+		executionMode = DEV_MODE;
+	if(process.argv[i] === '--debug')
+		executionMode = DEBUG_MODE;
+}
+
+module.exports = {
+	dbName: '',
+	dbLogin: '',
+	dbPassword: '',
+	smtpHost: '',
+	smtpPort: 587,
+	smtpLogin: '',
+	smtpPassword: '',
+	smtpSender: '',
+	smtpRecipient: '',
+	ipcAddress: os.platform() == 'win32' ? '\\\\?\\pipe\\daemon_jobs' : '/tmp/daemon_jobs_pipe',
+	outputCollection: 'logs.daemon',
+	executionMode: executionMode,
+	isDebugMode: executionMode == DEBUG_MODE
+};
